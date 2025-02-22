@@ -137,20 +137,19 @@ function generateSitemap() {
     <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>${priority}</priority>`
-
     ;["es-US", "fr"].forEach((lang) => {
       xml += `
-    <xhtml:link rel="alternate" hreflang="${lang}" href="${baseUrl}/${lang}${
-        loc === "/" ? "" : `/${loc.replace(/^\//, "")}`
+    <xhtml:link rel="alternate" hreflang="${lang}" href="${baseUrl}${lang}${
+        loc === "/" ? "" : `${loc.replace(/^\//, "")}`
       }"/>`
     })
 
     xml += `
     <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}${
-      loc === "/" ? "" : `/${loc.replace(/^\//, "")}`
+      loc === "/" ? "" : `${loc.replace(/^\//, "")}`
     }"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}${
-      loc === "/" ? "" : `/${loc.replace(/^\//, "")}`
+      loc === "/" ? "" : `${loc.replace(/^\//, "")}`
     }"/>
   </url>`
   })
