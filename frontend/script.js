@@ -36,6 +36,7 @@ async function fetchPages() {
     collectionItems = { ...response.collectionItems }
     // Render static pages
     document.getElementById("staticPages").innerHTML = response.staticPages
+      .filter((page) => !page.collectionId || page.draft || page.archived)
       .map(
         (page) => `
           <label>

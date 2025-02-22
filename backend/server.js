@@ -86,7 +86,12 @@ async function fetchAllCollectionItems(collectionId, headers) {
 
       if (!response.items || response.items.length === 0) break
 
-      items = items.concat(response.items)
+      // Filter out items that are drafted or archived
+      const validItems = response.items.filter(
+        (item) => !item.draft && !item.archived
+      )
+
+      items = items.concat(validItems)
       offset += limit
     }
   } catch (error) {
