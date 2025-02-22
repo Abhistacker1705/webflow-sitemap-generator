@@ -1,4 +1,4 @@
-const BACKEND_BASE_URL = "https://webflow-sitemap-generator.onrender.com/" // Update this to your Render backend URL
+const BACKEND_BASE_URL = "https://webflow-sitemap-generator.onrender.com" // Update this to your Render backend URL
 let collectionItems = {}
 function showLoadingModal() {
   const modal = document.getElementById("loadingModal")
