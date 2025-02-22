@@ -139,7 +139,7 @@ function generateSitemap() {
     <priority>${priority}</priority>`
     ;["es-US", "fr"].forEach((lang) => {
       xml += `
-    <xhtml:link rel="alternate" hreflang="${lang}" href="${baseUrl}${lang}${
+    <xhtml:link rel="alternate" hreflang="${lang}" href="${baseUrl}${lang}/${
         loc === "/" ? "" : `${loc.replace(/^\//, "")}`
       }"/>`
     })
