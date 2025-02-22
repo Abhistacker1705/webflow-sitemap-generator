@@ -133,9 +133,7 @@ function generateSitemap() {
   urls.forEach(({ loc, lastmod, priority }) => {
     xml += `
   <url>
-    <loc>${loc === "/" ? "" : baseUrl}${
-      loc === "/" ? "" : loc.replace(/^\//, "")
-    }</loc>
+    <loc>${baseUrl}${loc === "/" ? "" : loc.replace(/^\//, "")}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>${priority}</priority>`
