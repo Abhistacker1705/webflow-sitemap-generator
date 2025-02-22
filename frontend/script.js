@@ -133,7 +133,9 @@ function generateSitemap() {
   urls.forEach(({ loc, lastmod, priority }) => {
     xml += `
   <url>
-    <loc>${baseUrl}${loc === "/" ? "" : loc.replace(/^\//, "")}</loc>
+    <loc>${loc === "/" ? baseUrl.replace(/^\//, "") : baseUrl}${
+      loc === "/" ? "" : loc.replace(/^\//, "")
+    }</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>${priority}</priority>`
@@ -145,12 +147,12 @@ function generateSitemap() {
     })
 
     xml += `
-    <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}${
-      loc === "/" ? "" : `${loc.replace(/^\//, "")}`
-    }"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}${
-      loc === "/" ? "" : `${loc.replace(/^\//, "")}`
-    }"/>
+    <xhtml:link rel="alternate" hreflang="en" href="${
+      loc === "/" ? baseUrl.replace(/^\//, "") : baseUrl
+    }${loc === "/" ? "" : `${loc.replace(/^\//, "")}`}"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="${
+      loc === "/" ? baseUrl.replace(/^\//, "") : baseUrl
+    }${loc === "/" ? "" : `${loc.replace(/^\//, "")}`}"/>
   </url>`
   })
 
