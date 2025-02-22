@@ -132,25 +132,30 @@ function generateSitemap() {
   urls.forEach(({ loc, lastmod, priority }) => {
     xml += `
       <url>
-        <loc>${baseUrl}${loc.replace(/^\//, "")}</loc>
+        <loc>${baseUrl}${(
+      <loc>
+        ${baseUrl}${loc === "/" ? "" : loc.replace(/^\//, "")}
+      </loc>
+    )}</loc>
         <lastmod>${lastmod}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>${priority}</priority>`
     ;["es-US", "fr"].forEach((lang) => {
       xml += `
-        <xhtml:link rel="alternate" hreflang="${lang}" href="${baseUrl}${lang}/${loc.replace(
-        /^\//,
-        ""
-      )}"/>`
+        <xhtml:link rel="alternate" hreflang="${lang}" href="${baseUrl}${lang}${
+        loc === "/" ? "" : `/${loc.replace(/^\//, "")}`
+      }"/>`
     })
     xml += `
-        <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}${loc.replace(
-      /^\//,
-      ""
+        <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}${(
+      <loc>
+        ${baseUrl}${loc === "/" ? "" : loc.replace(/^\//, "")}
+      </loc>
     )}"/>
-        <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}${loc.replace(
-      /^\//,
-      ""
+        <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}${(
+      <loc>
+        ${baseUrl}${loc === "/" ? "" : loc.replace(/^\//, "")}
+      </loc>
     )}"/>
       </url>`
   })
