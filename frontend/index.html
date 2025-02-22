@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Webflow Sitemap Generator</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Webflow Sitemap Generator</h1>
+        <p>Generate a sitemap for your Webflow site with ease.</p>
+      </header>
+
+      <div class="input-section">
+        <div class="input-group">
+          <label for="baseUrl">Base URL:</label>
+          <input type="text" id="baseUrl" placeholder="https://quso.ai" />
+        </div>
+        <div class="input-group">
+          <label for="apiKey">API Key:</label>
+          <input
+            type="text"
+            id="apiKey"
+            placeholder="Enter your Webflow API Key"
+          />
+        </div>
+        <div class="input-group">
+          <label for="siteId">Site ID:</label>
+          <input
+            type="text"
+            id="siteId"
+            placeholder="Enter your Webflow Site ID"
+          />
+        </div>
+        <button class="btn-primary" onclick="fetchPages()">Fetch Pages</button>
+      </div>
+
+      <div class="sections">
+        <section class="static-pages">
+          <h2>Static Pages</h2>
+          <label class="select-all">
+            <input
+              type="checkbox"
+              id="selectAllStatic"
+              onclick="toggleSelectAll('static')"
+            />
+            Select All
+          </label>
+          <div id="staticPages" class="checkbox-list"></div>
+        </section>
+
+        <section class="collections">
+          <h2>Collections</h2>
+          <label class="select-all">
+            <input
+              type="checkbox"
+              id="selectAllCollection"
+              onclick="toggleSelectAll('collection')"
+            />
+            Select All
+          </label>
+          <div id="collections" class="checkbox-list"></div>
+        </section>
+      </div>
+
+      <div class="actions">
+        <button class="btn-primary" onclick="generateSitemap()">
+          Generate Sitemap
+        </button>
+        <button class="btn-secondary" onclick="copyToClipboard()">
+          Copy to Clipboard
+        </button>
+        <button class="btn-secondary" onclick="downloadSitemapTxt()">
+          Download Sitemap
+        </button>
+      </div>
+
+      <!-- Loading Modal -->
+      <div id="loadingModal" class="modal">
+        <div class="modal-content">
+          <div class="spinner"></div>
+          <p>Generating sitemap...</p>
+        </div>
+      </div>
+
+      <textarea id="sitemapOutput" class="sitemap-output" readonly></textarea>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
