@@ -138,7 +138,7 @@ function generateSitemap() {
     }</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>${priority}</priority>`
+    <priority>${priority.toFixed(1)}</priority>`
     ;["es-US", "fr"].forEach((lang) => {
       xml += `
     <xhtml:link rel="alternate" hreflang="${lang}" href="${baseUrl}${lang.toLowerCase()}${
