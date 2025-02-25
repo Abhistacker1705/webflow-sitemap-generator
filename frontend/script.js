@@ -111,7 +111,8 @@ function generateSitemap() {
     let priority = priorityInput?.value
       ? parseFloat(priorityInput.value).toFixed(1)
       : "0.8"
-    let lastmod = cb.getAttribute("data-lastmod") || new Date().toISOString()
+    let lastmod =
+      cb.getAttribute("data-lastmod") || new Date().toISOString().split("T")[0]
 
     urls.push({ loc: cb.value, lastmod, priority })
   })
@@ -127,7 +128,11 @@ function generateSitemap() {
       : "0.8"
 
     collectionItems[collectionSlug].forEach((url) => {
-      urls.push({ loc: url, lastmod: new Date().toISOString(), priority })
+      urls.push({
+        loc: url,
+        lastmod: new Date().toISOString().split("T")[0],
+        priority,
+      })
     })
   })
 
