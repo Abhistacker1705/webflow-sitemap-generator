@@ -108,7 +108,7 @@ function generateSitemap() {
     let priorityInput = document.querySelector(
       `input[data-priority='${cb.value}']`
     )
-    let priority = priorityInput?.value || "0.8" // Default to 0.8 if no priority is set
+    let priority = priorityInput?.value.toFixed(1) || "0.8" // Default to 0.8 if no priority is set
     let lastmod = cb.getAttribute("data-lastmod") || new Date().toISOString()
 
     urls.push({ loc: cb.value, lastmod, priority })
@@ -120,7 +120,7 @@ function generateSitemap() {
     let priorityInput = document.querySelector(
       `input[data-collection-priority='${collectionSlug}']`
     )
-    let priority = priorityInput?.value || "0.8" // Default to 0.8 if no priority is set
+    let priority = priorityInput?.value.toFixed(1) || "0.8" // Default to 0.8 if no priority is set
 
     collectionItems[collectionSlug].forEach((url) => {
       urls.push({ loc: url, lastmod: new Date().toISOString(), priority })
@@ -138,7 +138,7 @@ function generateSitemap() {
     }</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>${priority.toFixed(1)}</priority>`
+    <priority>${priority}</priority>`
     ;["es-US", "fr"].forEach((lang) => {
       xml += `
     <xhtml:link rel="alternate" hreflang="${lang}" href="${baseUrl}${lang.toLowerCase()}${
