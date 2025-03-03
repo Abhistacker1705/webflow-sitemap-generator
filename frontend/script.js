@@ -1,14 +1,14 @@
 // const BACKEND_BASE_URL = "https://webflow-sitemap-generator.onrender.com" // Update this to your Render backend URL
 // let collectionItems = {}
-// function showLoadingModal() {
-//   const modal = document.getElementById("loadingModal")
-//   modal.style.display = "flex" // Show the modal
-// }
+function showLoadingModal() {
+  const modal = document.getElementById("loadingModal")
+  modal.style.display = "flex" // Show the modal
+}
 
-// function hideLoadingModal() {
-//   const modal = document.getElementById("loadingModal")
-//   modal.style.display = "none" // Hide the modal
-// }
+function hideLoadingModal() {
+  const modal = document.getElementById("loadingModal")
+  modal.style.display = "none" // Hide the modal
+}
 
 // async function fetchPages() {
 //   showLoadingModal() // Show loading modal
@@ -71,20 +71,20 @@
 //   }
 // }
 
-// function toggleSelectAll(type) {
-//   const selectAllCheckbox = document.getElementById(
-//     `selectAll${type.charAt(0).toUpperCase() + type.slice(1)}`
-//   )
+function toggleSelectAll(type) {
+  const selectAllCheckbox = document.getElementById(
+    `selectAll${type.charAt(0).toUpperCase() + type.slice(1)}`
+  )
 
-//   if (!selectAllCheckbox) {
-//     console.error(`"Select All" checkbox for type "${type}" not found.`)
-//     return
-//   }
+  if (!selectAllCheckbox) {
+    console.error(`"Select All" checkbox for type "${type}" not found.`)
+    return
+  }
 
-//   const checkboxes = document.querySelectorAll(`input.${type}`)
-//   const selectAll = selectAllCheckbox.checked
-//   checkboxes.forEach((cb) => (cb.checked = selectAll))
-// }
+  const checkboxes = document.querySelectorAll(`input.${type}`)
+  const selectAll = selectAllCheckbox.checked
+  checkboxes.forEach((cb) => (cb.checked = selectAll))
+}
 
 // function generateSitemap() {
 //   showLoadingModal() // Show loading modal
@@ -183,23 +183,23 @@
 //   hideLoadingModal() // Hide modal when done
 // }
 
-// function copyToClipboard() {
-//   const textarea = document.getElementById("sitemapOutput")
-//   textarea.select()
-//   document.execCommand("copy")
-//   alert("Sitemap copied to clipboard!")
-// }
+function copyToClipboard() {
+  const textarea = document.getElementById("sitemapOutput")
+  textarea.select()
+  document.execCommand("copy")
+  alert("Sitemap copied to clipboard!")
+}
 
-// function downloadSitemapTxt() {
-//   const text = document.getElementById("sitemapOutput").value
-//   const blob = new Blob([text], { type: "text/plain" })
-//   const link = document.createElement("a")
-//   link.href = URL.createObjectURL(blob)
-//   link.download = "sitemap.txt"
-//   document.body.appendChild(link)
-//   link.click()
-//   document.body.removeChild(link)
-// }
+function downloadSitemapTxt() {
+  const text = document.getElementById("sitemapOutput").value
+  const blob = new Blob([text], { type: "text/plain" })
+  const link = document.createElement("a")
+  link.href = URL.createObjectURL(blob)
+  link.download = "sitemap.txt"
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
 
 const BACKEND_BASE_URL = "https://webflow-sitemap-generator.onrender.com" // Update this to your Render backend URL
 let collectionItems = {}
