@@ -203,7 +203,7 @@ async function fetchAllCollectionItems(collectionId, headers) {
 
       // Filter out items that are drafted or archived
       const validItems = response.items.filter(
-        (item) => !item.draft && !item.archived
+        (item) => !item.isArchived && !item.isDraft
       )
 
       items = items.concat(validItems)
