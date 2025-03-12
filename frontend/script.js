@@ -206,6 +206,9 @@ function generateSitemap() {
     })
   })
 
+  //sort by priority
+  urls.sort((a, b) => parseFloat(b.priority) - parseFloat(a.priority))
+
   // Generate XML Sitemap
   let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">`
 
@@ -270,91 +273,3 @@ function downloadSitemapTxt() {
   link.click()
   document.body.removeChild(link)
 }
-
-// function generateSitemap() {
-//   showLoadingModal() // Show loading modal
-
-//   let baseUrl = document.getElementById("baseUrl").value.trim()
-//   if (!baseUrl) {
-//     hideLoadingModal()
-//     return alert("Enter Base URL")
-//   }
-
-//   if (!baseUrl.endsWith("/")) {
-//     baseUrl += "/"
-//   }
-
-//   let urls = []
-
-//   // Add Static Pages
-//   document.querySelectorAll("input.static:checked").forEach((cb) => {
-//     let priorityInput = document.querySelector(
-//       `input[data-priority='${cb.value}']`
-//     )
-//     let priority = priorityInput?.value
-//       ? parseFloat(priorityInput.value).toFixed(1)
-//       : "0.8"
-//     let lastmod =
-//       cb.getAttribute("data-lastmod").split("T")[0] ||
-//       new Date().toISOString().split("T")[0]
-
-//     urls.push({ loc: cb.value, lastmod, priority })
-//   })
-
-//   // Add Collection Items
-//   document.querySelectorAll("input.collection:checked").forEach((cb) => {
-//     let collectionSlug = cb.value
-//     let priorityInput = document.querySelector(
-//       `input[data-collection-priority='${collectionSlug}']`
-//     )
-//     let priority = priorityInput?.value
-//       ? parseFloat(priorityInput.value).toFixed(1)
-//       : "0.8"
-
-//     collectionItems[collectionSlug].forEach((url) => {
-//       urls.push({
-//         loc: url,
-//         lastmod: new Date().toISOString().split("T")[0],
-//         priority,
-//       })
-//     })
-//   })
-
-//   // Generate XML Sitemap
-//   let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">`
-
-//   urls.forEach(({ loc, lastmod, priority }) => {
-//     xml += `
-//   <url>
-//     <loc>${baseUrl}${loc.replace(/^\//, "")}</loc>
-//     <lastmod>${lastmod}</lastmod>
-//     <changefreq>weekly</changefreq>
-//     <priority>${priority}</priority>`
-
-//     xml += `
-//     <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}${loc.replace(
-//       /^\//,
-//       ""
-//     )}"/>
-//     <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}${loc.replace(
-//       /^\//,
-//       ""
-//     )}"/>
-//   </url>`
-//   })
-
-//   xml += "\n</urlset>"
-
-//   let textarea = document.getElementById("sitemapOutput")
-//   if (!textarea) {
-//     textarea = document.createElement("textarea")
-//     textarea.id = "sitemapOutput"
-//     textarea.className = "sitemap-output"
-//     textarea.style.width = "100%"
-//     textarea.style.height = "200px"
-//     textarea.readOnly = true
-//     document.body.appendChild(textarea)
-//   }
-//   textarea.value = xml
-//   hideLoadingModal()
-// }
