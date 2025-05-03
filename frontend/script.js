@@ -211,31 +211,48 @@ function generateSitemap() {
 
   // Generate XML Sitemap
   let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">`
+  const languages = ["en", "es-US", "fr"]
 
   urls.forEach(({ loc, lastmod, priority }) => {
-    xml += `
-  <url>
-    <loc>${loc === "/" ? baseUrl.slice(0, -1) : baseUrl}${
-      loc === "/" ? "" : loc.replace(/^\//, "")
-    }</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>${priority}</priority>`
-    ;["es-US", "fr"].forEach((lang) => {
-      xml += `
-    <xhtml:link rel="alternate" hreflang="${lang}" href="${baseUrl}${lang.toLowerCase()}${
-        loc === "/" ? "" : `/${loc.replace(/^\//, "")}`
-      }"/>`
-    })
+    languages.forEach((lang) => {
+      let localizedLoc =
+        lang === "en"
+          ? `${loc === "/" ? baseUrl.slice(0, -1) : baseUrl}${
+              loc === "/" ? "" : loc.replace(/^\//, "")
+            }`
+          : `${baseUrl}${lang.toLowerCase()}${
+              loc === "/" ? "" : `/${loc.replace(/^\//, "")}`
+            }`
 
-    xml += `
-    <xhtml:link rel="alternate" hreflang="en" href="${
-      loc === "/" ? baseUrl.slice(0, -1) : baseUrl
-    }${loc === "/" ? "" : `${loc.replace(/^\//, "")}`}"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="${
-      loc === "/" ? baseUrl.slice(0, -1) : baseUrl
-    }${loc === "/" ? "" : `${loc.replace(/^\//, "")}`}"/>
-  </url>`
+      xml += `
+    <url>
+      <loc>${localizedLoc}</loc>
+      <lastmod>${lastmod}</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>${priority}</priority>`
+
+      // Add hreflang alternates
+      languages.forEach((altLang) => {
+        const altHref =
+          altLang === "en"
+            ? `${loc === "/" ? baseUrl.slice(0, -1) : baseUrl}${
+                loc === "/" ? "" : loc.replace(/^\//, "")
+              }`
+            : `${baseUrl}${altLang.toLowerCase()}${
+                loc === "/" ? "" : `/${loc.replace(/^\//, "")}`
+              }`
+
+        xml += `
+      <xhtml:link rel="alternate" hreflang="${altLang}" href="${altHref}"/>`
+      })
+
+      // Add x-default
+      xml += `
+      <xhtml:link rel="alternate" hreflang="x-default" href="${
+        loc === "/" ? baseUrl.slice(0, -1) : baseUrl
+      }${loc === "/" ? "" : `${loc.replace(/^\//, "")}`}"/>
+    </url>`
+    })
   })
 
   xml += "\n</urlset>"
