@@ -1,27 +1,55 @@
 const BACKEND_BASE_URL = "https://webflow-sitemap-generator.onrender.com" // Update this to your Render backend URL
 let collectionItems = {}
+
 function showLoadingModal() {
   const modal = document.getElementById("loadingModal")
-  modal.style.display = "flex" // Show the modal
+  modal.style.display = "flex"
 }
 
 function hideLoadingModal() {
   const modal = document.getElementById("loadingModal")
-  modal.style.display = "none" // Hide the modal
+  modal.style.display = "none"
+}
+
+function addLanguageConfig() {
+  const configsDiv = document.getElementById("languageConfigs")
+  const newConfig = document.createElement("div")
+  newConfig.className = "language-config"
+  newConfig.innerHTML = `
+    <input type="text" class="lang-code" placeholder="Language Code (e.g., en)" value="en">
+    <input type="text" class="lang-folder" placeholder="Subfolder (e.g., en or leave empty)" value="">
+    <button class="btn-remove" onclick="removeLanguageConfig(this)">×</button>
+  `
+  configsDiv.appendChild(newConfig)
+}
+
+function removeLanguageConfig(button) {
+  button.parentElement.remove()
+}
+
+function getLanguageConfigs() {
+  const configs = []
+  document.querySelectorAll(".language-config").forEach((config) => {
+    const code = config.querySelector(".lang-code").value.trim()
+    const folder = config.querySelector(".lang-folder").value.trim()
+    if (code) {
+      configs.push({ code, folder })
+    }
+  })
+  return configs
 }
 
 async function fetchPages() {
-  showLoadingModal() // Show loading modal
+  showLoadingModal()
   const apiKey = document.getElementById("apiKey").value.trim()
   const siteId = document.getElementById("siteId").value.trim()
 
   if (!apiKey || !siteId) {
-    hideLoadingModal() // Hide modal if inputs are invalid
+    hideLoadingModal()
     return alert("Enter API Key and Site ID")
   }
 
   try {
-    // Fetch data from the backend API
     const response = await fetch(`${BACKEND_BASE_URL}/api/fetch-data`, {
       method: "POST",
       headers: {
@@ -34,6 +62,7 @@ async function fetchPages() {
       throw new Error(response.error)
     }
     collectionItems = { ...response.collectionItems }
+
     // Render static pages
     document.getElementById("staticPages").innerHTML = response.staticPages
       .filter((page) => !page.collectionId || page.draft || page.archived)
@@ -47,7 +76,7 @@ async function fetchPages() {
       )
       .join("")
 
-    // Render collections
+    // Show collections
     let collectionsHtml = ""
     for (const collection of response.collections) {
       collectionsHtml += `
@@ -67,7 +96,7 @@ async function fetchPages() {
     console.error("Error fetching data:", error)
     alert("Failed to fetch data. Please check your API key and site ID.")
   } finally {
-    hideLoadingModal() // Hide modal when done
+    hideLoadingModal()
   }
 }
 
@@ -86,82 +115,13 @@ function toggleSelectAll(type) {
   checkboxes.forEach((cb) => (cb.checked = selectAll))
 }
 
-function showLoadingModal() {
-  const modal = document.getElementById("loadingModal")
-  modal.style.display = "flex" // Show the modal
-}
-
-function hideLoadingModal() {
-  const modal = document.getElementById("loadingModal")
-  modal.style.display = "none" // Hide the modal
-}
-
-async function fetchPages() {
-  showLoadingModal() // Show loading modal
-  const apiKey = document.getElementById("apiKey").value.trim()
-  const siteId = document.getElementById("siteId").value.trim()
-
-  if (!apiKey || !siteId) {
-    hideLoadingModal() // Hide modal if inputs are invalid
-    return alert("Enter API Key and Site ID")
-  }
-
-  try {
-    // Fetch data from the backend API
-    const response = await fetch(`${BACKEND_BASE_URL}/api/fetch-data`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ apiKey, siteId }),
-    }).then((res) => res.json())
-
-    if (response.error) {
-      throw new Error(response.error)
-    }
-    collectionItems = { ...response.collectionItems }
-
-    // Render static pages
-    document.getElementById("staticPages").innerHTML = response.staticPages
-      .filter((page) => !page.collectionId || page.draft || page.archived)
-      .map(
-        (page) => `
-          <label>
-            <input type="checkbox" class="static" value="${page.publishedPath}" data-lastmod="${page.lastUpdated}">
-            ${page.title}
-            <input type="number" step="0.1" min="0.1" max="1.0" placeholder="Priority (0.8)" data-priority="${page.publishedPath}" value="0.8">
-          </label>`
-      )
-      .join("")
-
-    // Render collections with correct paths
-    let collectionsHtml = ""
-    for (const collection of response.collections) {
-      const items = response.collectionItems[collection.slug] || []
-      collectionsHtml += `
-        <label>
-          <input type="checkbox" class="collection" value="${collection.slug}">
-          ${collection.displayName} (${items.length} items)
-          <input type="number" step="0.1" min="0.1" max="1.0" placeholder="Priority (0.8)" data-collection-priority="${collection.slug}" value="0.8">
-        </label>`
-    }
-
-    document.getElementById("collections").innerHTML = collectionsHtml
-  } catch (error) {
-    console.error("Error fetching data:", error)
-    alert("Failed to fetch data. Please check your API key and site ID.")
-  } finally {
-    hideLoadingModal() // Hide modal when done
-  }
-}
-
 function generateSitemap() {
-  showLoadingModal() // Show loading modal
+  showLoadingModal()
 
   // Get the base URL from the input field
   let baseUrl = document.getElementById("baseUrl").value.trim()
   if (!baseUrl) {
-    hideLoadingModal() // Hide modal if base URL is invalid
+    hideLoadingModal()
     return alert("Enter Base URL")
   }
 
@@ -211,18 +171,23 @@ function generateSitemap() {
 
   // Generate XML Sitemap
   let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">`
-  const languages = ["en", "es-US", "fr"]
+
+  const languageConfigs = getLanguageConfigs()
+  if (languageConfigs.length === 0) {
+    languageConfigs.push({ code: "en", folder: "" }) // Default to English if no configs
+  }
 
   urls.forEach(({ loc, lastmod, priority }) => {
-    languages.forEach((lang) => {
-      let localizedLoc =
-        lang === "en"
-          ? `${loc === "/" ? baseUrl.slice(0, -1) : baseUrl}${
-              loc === "/" ? "" : loc.replace(/^\//, "")
-            }`
-          : `${baseUrl}${lang.toLowerCase()}${
-              loc === "/" ? "" : `/${loc.replace(/^\//, "")}`
-            }`
+    languageConfigs.forEach(({ code, folder }) => {
+      // Construct the URL based on whether there's a subfolder
+      let localizedLoc
+      if (folder) {
+        // If there's a subfolder, use it
+        localizedLoc = `${baseUrl}${folder}${loc === "/" ? "" : loc}`
+      } else {
+        // If no subfolder, use the base URL directly
+        localizedLoc = `${baseUrl}${loc === "/" ? "" : loc.replace(/^\//, "")}`
+      }
 
       xml += `
     <url>
@@ -232,25 +197,25 @@ function generateSitemap() {
       <priority>${priority}</priority>`
 
       // Add hreflang alternates
-      languages.forEach((altLang) => {
-        const altHref =
-          altLang === "en"
-            ? `${loc === "/" ? baseUrl.slice(0, -1) : baseUrl}${
-                loc === "/" ? "" : loc.replace(/^\//, "")
-              }`
-            : `${baseUrl}${altLang.toLowerCase()}${
-                loc === "/" ? "" : `/${loc.replace(/^\//, "")}`
-              }`
+      languageConfigs.forEach(({ code: altCode, folder: altFolder }) => {
+        let altHref
+        if (altFolder) {
+          altHref = `${baseUrl}${altFolder}${loc === "/" ? "" : loc}`
+        } else {
+          altHref = `${baseUrl}${loc === "/" ? "" : loc.replace(/^\//, "")}`
+        }
 
         xml += `
-      <xhtml:link rel="alternate" hreflang="${altLang}" href="${altHref}"/>`
+      <xhtml:link rel="alternate" hreflang="${altCode}" href="${altHref}"/>`
       })
 
-      // Add x-default
+      const defaultConfig = languageConfigs[0]
+      const defaultHref = defaultConfig.folder
+        ? `${baseUrl}${defaultConfig.folder}${loc === "/" ? "" : loc}`
+        : `${baseUrl}${loc === "/" ? "" : loc.replace(/^\//, "")}`
+
       xml += `
-      <xhtml:link rel="alternate" hreflang="x-default" href="${
-        loc === "/" ? baseUrl.slice(0, -1) : baseUrl
-      }${loc === "/" ? "" : `${loc.replace(/^\//, "")}`}"/>
+      <xhtml:link rel="alternate" hreflang="x-default" href="${defaultHref}"/>
     </url>`
     })
   })
@@ -269,7 +234,7 @@ function generateSitemap() {
     document.body.appendChild(textarea)
   }
   textarea.value = xml
-  hideLoadingModal() // Hide modal when done
+  hideLoadingModal()
 }
 
 function copyToClipboard() {

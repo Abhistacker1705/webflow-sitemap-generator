@@ -34,6 +34,40 @@
             placeholder="Enter your Webflow Site ID"
           />
         </div>
+        <div class="input-section">
+          <div class="input-group">
+            <label>Language Configuration:</label>
+            <div id="languageConfigs">
+              <div class="language-config">
+                <div class="tooltip-container">
+                  <input
+                    type="text"
+                    class="lang-code"
+                    placeholder="Language Code (e.g., en)"
+                    value="en"
+                  />
+                  <span class="tooltip"
+                    >Language code should follow ISO 639-1 (e.g., 'en', 'es',
+                    'fr') or ISO 639-1 with region (e.g., 'en-US', 'es-ES',
+                    'fr-FR')</span
+                  >
+                </div>
+                <input
+                  type="text"
+                  class="lang-folder"
+                  placeholder="Subfolder (e.g., en or leave empty)"
+                  value=""
+                />
+                <button class="btn-remove" onclick="removeLanguageConfig(this)">
+                  ×
+                </button>
+              </div>
+            </div>
+            <button class="btn-secondary" onclick="addLanguageConfig()">
+              Add Language
+            </button>
+          </div>
+        </div>
         <button class="btn-primary" onclick="fetchPages()">Fetch Pages</button>
       </div>
 
