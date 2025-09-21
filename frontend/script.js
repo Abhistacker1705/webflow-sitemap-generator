@@ -197,26 +197,29 @@ function generateSitemap() {
       <priority>${priority}</priority>`
 
       // Add hreflang alternates
-      languageConfigs.forEach(({ code: altCode, folder: altFolder }) => {
-        let altHref
-        if (altFolder) {
-          altHref = `${baseUrl}${altFolder}${loc === "/" ? "" : loc}`
-        } else {
-          altHref = `${baseUrl}${loc === "/" ? "" : loc.replace(/^\//, "")}`
-        }
+      if (languageConfigs.length > 1) {
+        languageConfigs.forEach(({ code: altCode, folder: altFolder }) => {
+          let altHref
+          if (altFolder) {
+            altHref = `${baseUrl}${altFolder}${loc === "/" ? "" : loc}`
+          } else {
+            altHref = `${baseUrl}${loc === "/" ? "" : loc.replace(/^\//, "")}`
+          }
+
+          xml += `
+      <xhtml:link rel="alternate" hreflang="${altCode}" href="${altHref}"/>`
+        })
+      }
+      if (languageConfigs.length > 1) {
+        const defaultConfig = languageConfigs[0]
+        const defaultHref = defaultConfig.folder
+          ? `${baseUrl}${defaultConfig.folder}${loc === "/" ? "" : loc}`
+          : `${baseUrl}${loc === "/" ? "" : loc.replace(/^\//, "")}`
 
         xml += `
-      <xhtml:link rel="alternate" hreflang="${altCode}" href="${altHref}"/>`
-      })
-
-      const defaultConfig = languageConfigs[0]
-      const defaultHref = defaultConfig.folder
-        ? `${baseUrl}${defaultConfig.folder}${loc === "/" ? "" : loc}`
-        : `${baseUrl}${loc === "/" ? "" : loc.replace(/^\//, "")}`
-
-      xml += `
       <xhtml:link rel="alternate" hreflang="x-default" href="${defaultHref}"/>
     </url>`
+      }
     })
   })
 
